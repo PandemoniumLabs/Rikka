@@ -1,14 +1,15 @@
 # Logger writen by ChatGPT cuz I couldn't be arsed to do it myself
 import logging
-import os
+from pathlib import Path
 
 def get_logger(name: str = "app_logger") -> logging.Logger:
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         logger.setLevel(logging.DEBUG)
 
-        os.makedirs("logs", exist_ok=True)
-        log_path = os.path.join("logs", "logs.log")
+        log_dir = Path.home() / "Project-Ibuki" / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_path = str(log_dir / "app.log")
 
         fh = logging.FileHandler(log_path, mode="a")
         fh.setLevel(logging.DEBUG)

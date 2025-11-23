@@ -1,6 +1,8 @@
 from textual.screen import Screen
 from textual.widgets import Input, ListView, ListItem, Static, Footer
 from textual.app import ComposeResult
+
+from ibuki import CSS_PATH
 from ..backend.backend_v3 import AnimeBackend as backend
 from ..backend.utils_v3 import clean_html
 from .anime_detail import AnimeDetailScreen
@@ -11,7 +13,7 @@ class SearchScreen(Screen):
         ('escape', 'go_back', 'Go Back'),
         ('s', 'synopsis', 'Synopsis')
     ]
-    CSS_PATH = '../css/search_styles.css'
+    CSS_PATH = str(CSS_PATH / "search_styles.css")
 
     def compose(self) -> ComposeResult:
         yield Input(placeholder='Search for anime :3', id='search_input')

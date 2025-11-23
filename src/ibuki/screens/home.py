@@ -3,13 +3,14 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Static, Footer, Header, Button
 
+from ibuki import CSS_PATH
 from .search import SearchScreen
 from .settings import SettingsScreen
 from ..backend.backend_v3 import AnimeBackend
 from .continue_watching import ContinueWatchingScreen
 
 class IbukiHome(Screen):
-    CSS_PATH = "../css/home_styles.css"
+    CSS_PATH = str(CSS_PATH / "home_styles.css")
     banner = """
 ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗   ██╗██████╗ ██╗   ██╗██╗  ██╗██╗       ██████╗ 
 ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝   ██║██╔══██╗██║   ██║██║ ██╔╝██║    ██╗╚════██╗

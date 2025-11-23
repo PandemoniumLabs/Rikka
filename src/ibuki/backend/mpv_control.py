@@ -10,7 +10,7 @@ from ..logs.logger import get_logger
 # MPVControl v2
 
 class MPVControl:
-    def __init__(self, sock_path="/tmp/ibuki-mpv.sock"):
+    def __init__(self, sock_path = Path.home() / "Project-Ibuki" / "mpv.sock"):
         self.logger = get_logger("MPVControl")
         self.sock_path = sock_path
         self.process = None

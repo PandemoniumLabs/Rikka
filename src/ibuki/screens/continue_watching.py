@@ -1,3 +1,4 @@
+from ibuki import CSS_PATH
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.containers import Vertical
@@ -5,7 +6,7 @@ from ..backend.backend_v3 import AnimeBackend
 from textual.widgets import Static, Footer, Header, Button
 
 class ContinueWatchingScreen(Screen):
-    CSS_PATH = "../css/continue_watching.css"
+    CSS_PATH = str(CSS_PATH / "continue_watching_styles.css")
     BINDINGS = [
         ("escape", "quit_app", "Quit")
     ]

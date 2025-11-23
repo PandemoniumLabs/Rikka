@@ -23,7 +23,7 @@ class AnimeBackend:
         self.current_anime = None
         self.current_episode = None
 
-        self.settings = settings or AnimeSettings(config_path=Path.home() / "Project-Ibuki" / "config" / "settings.yaml")
+        self.settings = settings or AnimeSettings(config_path= Path.home() / "Project-Ibuki" / "config" / "settings.yaml")
         s = self.settings
         self.global_quality = s.get("quality")
         self.auto_resume = s.get("auto_resume")

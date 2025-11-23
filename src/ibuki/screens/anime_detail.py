@@ -1,3 +1,4 @@
+from ibuki import CSS_PATH
 from textual.screen import Screen
 from textual.widgets import Static, Footer
 from textual.app import ComposeResult
@@ -7,7 +8,8 @@ class AnimeDetailScreen(Screen):
     BINDINGS = [
         ('escape', 'go_back', 'Go Back')
     ]
-    CSS_PATH = '../css/details_styles.css'
+
+    CSS_PATH = str(CSS_PATH / "details_styles.css")
 
     def __init__(self, anime: Anime, synopsis: str):
         super().__init__()
