@@ -48,7 +48,7 @@ git clone "$REPO" "$TMP_DIR" --depth 1 --branch "$BRANCH" >/dev/null 2>&1
 
 cd "$TMP_DIR"
 if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/halo.png" ]]; then
-  kitty +kitten icat images/halo.png
+  kitty +kitten icat images/halo.png 2>/dev/null
   echo ""
 else
   echo -e "${CYAN}"
