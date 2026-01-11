@@ -1,7 +1,7 @@
 <div align="center">
     <img src="images/halo.png" alt="logo" />
     <br>
-    <img src="https://img.shields.io/badge/version-3.3.1-FF69B4?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-3.4.1-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>
 </div>
 <br>
@@ -21,16 +21,56 @@ A sleek, interactive TUI application for browsing and watching anime, powered by
 
 ---
 
-## Installation
-```bash
-git clone https://github.com/XeonXE534/Project-Ibuki.git
-cd Project-Ibuki
+---
 
-bash ./install.sh
+## Installation
+
+
+<details>
+<summary> Linux & macOS (Bash)</summary>
+
+Run this to install or upgrade Ibuki instantly:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.sh | bash
+
 ```
 
-After installation, you can run Project-Ibuki anywhere using:
-`ibuki`
+>*For a hard reset, run this instead:*
+
+```bash
+curl -sSL https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.sh | bash -s -- --hard-reset
+
+```
+
+</details>
+
+<details>
+<summary> Windows (PowerShell)</summary>
+
+Open PowerShell as User and run this:
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.ps1'))
+
+```
+
+>*For a hard reset, run this instead:*
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; $script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.ps1'); Invoke-Expression "& { $script } --hard-reset"
+
+```
+
+</details>
+
+---
+
+### Post-Installation
+
+Once the script finishes its business, you can launch the project from anywhere by simply typing: `ibuki`
+
+---
 
 ## Requirements
 

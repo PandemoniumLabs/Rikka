@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Colors
 GREEN="\033[0;32m"
 CYAN="\033[0;36m"
 RED="\033[0;31m"
 YELLOW="\033[0;33m"
 RESET="\033[0m"
 
-info() { echo -e "${CYAN}[*] $1${RESET}"; }
+info()    { echo -e "${CYAN}[*] $1${RESET}"; }
 success() { echo -e "${GREEN}[+] $1${RESET}"; }
-warn() { echo -e "${YELLOW}[!] $1${RESET}"; }
-error() { echo -e "${RED}[!] $1${RESET}"; }
+warn()    { echo -e "${YELLOW}[!] $1${RESET}"; }
+error()   { echo -e "${RED}[!] $1${RESET}"; }
 
 spinner() {
   local pid=$1
   local message=$2
   local delay=0.1
   local spinstr='|/-\'
-  printf ">>> %s " "$message"
+  printf "${CYAN}>>> %s ${RESET}" "$message"
   while kill -0 "$pid" 2>/dev/null; do
     for i in $(seq 0 3); do
       printf "\b%c" "${spinstr:i:1}"
@@ -29,35 +28,25 @@ spinner() {
 }
 
 HARD_RESET=false
+DEV_MODE=false
 for arg in "$@"; do
   [[ "$arg" == "--hard-reset" ]] && HARD_RESET=true
+  [[ "$arg" == "--dev" ]] && DEV_MODE=true
 done
 
-IBUKI_DIR="$HOME/Project-Ibuki"
-TMP_HELPER="$(mktemp)"
+REPO="https://github.com/XeonXE534/Project-Ibuki.git"
+BRANCH="main"
+[[ "$DEV_MODE" == true ]] && BRANCH="test_branch"
 
-# Atomic hard reset flow
-if $HARD_RESET; then
-  warn "Hard reset enabled!"
-  cat >"$TMP_HELPER" <<EOF
-#!/usr/bin/env bash
-set -e
-sleep 1
-rm -rf "$IBUKI_DIR"
-git clone https://github.com/XeonXE534/Project-Ibuki.git "$IBUKI_DIR"
-info() { echo -e "\\033[0;36m[*] \$1\\033[0m"; }
-success() { echo -e "\\033[0;32m[+] \$1\\033[0m"; }
+TMP_DIR=$(mktemp -d)
 
-info ">>> Hard reset done! Now run: bash $IBUKI_DIR/$(basename "$0")"
-EOF
-
-  chmod +x "$TMP_HELPER"
-  info "Spawning helper to delete old install and reclone..."
-  "$TMP_HELPER" &
-  exit 0
+if [[ "$DEV_MODE" == true ]]; then
+  warn "Installing from dev branch (test_branch)..."
 fi
 
-# Display header
+git clone "$REPO" "$TMP_DIR" --depth 1 --branch "$BRANCH" >/dev/null 2>&1
+
+cd "$TMP_DIR"
 if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/halo.png" ]]; then
   kitty +kitten icat images/halo.png
   echo ""
@@ -76,7 +65,6 @@ EOF
   echo ""
 fi
 
-# Detect python
 PYTHON_CMD=""
 if command -v python3 &>/dev/null; then
   PYTHON_CMD=python3
@@ -86,29 +74,29 @@ else
   error "Python3 not found!"
   exit 1
 fi
-info "Using Python: $($PYTHON_CMD --version 2>&1)"
 
-# Ensure pipx
 if ! command -v pipx &>/dev/null; then
   info "pipx not found, installing..."
   $PYTHON_CMD -m pip install --user pipx
   $PYTHON_CMD -m pipx ensurepath
+  export PATH="$PATH:$HOME/.local/bin"
 fi
 
-info "Upgrading pipx..."
-pip upgrade pipx >/dev/null 2>&1 &
-spinner $! "Upgrading pipx"
+if $HARD_RESET; then
+  warn "Hard resetting Ibuki environment..."
+  pipx uninstall ibuki >/dev/null 2>&1 || true
+fi
 
-cd "$IBUKI_DIR"
-
-if pipx list | grep -q 'ibuki'; then
-  info "Ibuki detected, upgrading..."
+if pipx list | grep -E -q 'ibuki|project-ibuki'; then
+  info "Upgrading Ibuki..."
   pipx install . --force >/dev/null 2>&1 &
-  spinner $! "Upgrading Ibuki"
-  success "Ibuki upgraded!"
+  spinner $! "Upgrading"
 else
   info "Installing Ibuki..."
-  pipx install . --force >/dev/null 2>&1 &
-  spinner $! "Installing Ibuki"
-  success "Ibuki installed!"
+  pipx install . >/dev/null 2>&1 &
+  spinner $! "Installing"
 fi
+
+cd ~
+rm -rf "$TMP_DIR"
+success "Ibuki installed! Run 'ibuki' to start."
