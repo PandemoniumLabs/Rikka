@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ibuki.backend import backend_v3 as backend_mod
+from ibuki.backend import backend as backend_mod
 from ibuki.backend import settings_control as settings_mod
 
 

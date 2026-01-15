@@ -1,7 +1,7 @@
 from ibuki import CSS_PATH
 from textual.screen import Screen
 from textual.app import ComposeResult
-from ..backend.backend_v3 import AnimeBackend
+from ..backend.backend import AnimeBackend
 from textual.widgets import ListView, ListItem, Static, Footer
 
 class EpisodeDetailScreen(Screen):
@@ -10,10 +10,10 @@ class EpisodeDetailScreen(Screen):
     ]
     CSS_PATH = CSS_PATH / "episode_styles.css"
 
-    def __init__(self, anime):
-        super().__init__()
+    def __init__(self, anime, backend: AnimeBackend, **kwargs):
+        super().__init__(**kwargs)
         self.anime = anime
-        self.backend = AnimeBackend()
+        self.backend = backend
         self.episodes = []
 
     def compose(self) -> ComposeResult:
@@ -36,7 +36,7 @@ class EpisodeDetailScreen(Screen):
             episode_list.append(item)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        """Handle when user clicks or presses enter on an episode"""
+        """Handle when a user clicks or presses enter on an episode"""
         selected_item = event.item
         ep_index = getattr(selected_item, "index", None)
 

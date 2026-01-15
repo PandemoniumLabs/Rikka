@@ -1,16 +1,14 @@
 from typing import Optional
-from pathlib import Path
 
-from .utils_v3 import WatchHistory
-from .settings_control import AnimeSettings
+from .utils import get_referrer_for_url
 from .mpv_control import MPVControl
 from ..logs.logger import get_logger
+from .watch_history import WatchHistory
+from .settings_control import AnimeSettings
 
 from anipy_api.anime import Anime
 from anipy_api.provider import ProviderStream, LanguageTypeEnum
 from anipy_api.provider.providers.allanime_provider import AllAnimeProvider
-
-# Animebackend v3
 
 class AnimeBackend:
     def __init__(self, settings: AnimeSettings = None):
@@ -23,9 +21,7 @@ class AnimeBackend:
         self.current_anime = None
         self.current_episode = None
 
-        self.settings = settings or AnimeSettings(
-            config_path=Path.home() / "Project-Ibuki" / "config" / "settings.yaml"
-        )
+        self.settings = settings or AnimeSettings()
         s = self.settings
         self.global_quality = s.get("quality")
         self.auto_resume = s.get("auto_resume")
@@ -38,20 +34,6 @@ class AnimeBackend:
         self.history_limit = s.get("history_limit")
 
         self.logger.debug(f"AnimeBackend ready with settings: {s.get_all()}")
-
-    @staticmethod
-    def get_referrer_for_url(url: str) -> str:
-        """
-        Get appropriate referrer for a given URL.
-        """
-        if "fast4speed" in url:
-            return "https://allanime.day"
-
-        elif "sunshinerays" in url:
-            return "https://allmanga.to"
-
-        else:
-            return "https://allanime.day"
 
     def get_anime_by_query(self, query):
         """
@@ -100,30 +82,27 @@ class AnimeBackend:
             return stream
 
         except Exception as e:
-            self.logger.exception("Error fetching stream: " + str(e) + ":/")
+            self.logger.exception(f"Error fetching stream: {str(e)} :/")
         return None
 
     def get_episodes(self, anime):
-        """Get list of episodes for an anime, with caching."""
-        anime_id = getattr(anime, "id", id(anime))
+        """Get a list of episodes for anime, with caching."""
+        anime_id = anime.identifier
 
         if anime_id in self.episodes_cache:
             return self.episodes_cache[anime_id]
 
         try:
-            episodes = anime.get_episodes(lang=LanguageTypeEnum.SUB)
+            episodes = anime.get_episodes(lang=self.settings.get("language", LanguageTypeEnum.SUB))
+            self.episodes_cache[anime_id] = episodes
+            return episodes
 
         except Exception as e:
-            self.logger.exception("Error fetching episodes: " + str(e))
+            self.logger.exception(f"Error fetching episodes for {anime.name}: {e}")
             return []
 
-        self.episodes_cache[anime_id] = episodes
-        return episodes
-
     def play_episode(self, anime: Anime, episode: int, stream: ProviderStream, start_time: int = 0):
-        """
-        Play a specific episode using MPVPlayer with user-configurable settings.
-        """
+        """Play a specific episode using MPVPlayer with user-configurable settings."""
         url = stream.url
         anime_id = getattr(anime, "identifier", str(id(anime)))
         anime_name = getattr(anime, "name", "Unknown")
@@ -131,7 +110,7 @@ class AnimeBackend:
         self.current_episode = episode
 
         start_time += self.skip_intro_seconds
-        referrer = getattr(stream, "referrer", None) or self.get_referrer_for_url(url)
+        referrer = getattr(stream, "referrer", None) or get_referrer_for_url(url)
 
         extra_args = []
         if self.fullscreen:

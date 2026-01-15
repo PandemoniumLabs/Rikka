@@ -1,4 +1,4 @@
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+# WORK IN PROGRESS
 
 param(
     [switch]$HardReset

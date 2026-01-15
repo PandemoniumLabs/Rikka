@@ -1,11 +1,10 @@
 import json
 import yaml
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any
+from platformdirs import user_config_dir
 
 from ..logs.logger import get_logger
-
-# Animesettings v1
 
 class AnimeSettings:
     DEFAULT_SETTINGS = {
@@ -22,20 +21,15 @@ class AnimeSettings:
         "history_limit": 50,
     }
 
-    def __init__(
-            self,
-            config_path: Optional[Path] = None,
-            use_yaml: bool = True
-    ):
+    def __init__(self, use_yaml: bool = True):
         self.logger = get_logger("AnimeSettings")
         self.use_yaml = use_yaml
 
-        if config_path:
-            self.config_path = config_path
-        else:
-            config_dir = Path.home() / "Project-Ibuki" / "config"
-            ext = "yaml" if use_yaml else "json"
-            self.config_path = config_dir / f"settings.{ext}"
+        self.config_dir = Path(user_config_dir("ibuki", "XeonXE534"))
+        self.config_dir.mkdir(parents=True, exist_ok=True)
+
+        ext = "yaml" if use_yaml else "json"
+        self.config_path = self.config_dir / f"settings.{ext}"
 
         self.settings: Dict[str, Any] = self.DEFAULT_SETTINGS.copy()
         self._ensure_config_dir()
@@ -172,10 +166,6 @@ class AnimeSettings:
 
     def __repr__(self):
         return f"<AnimeSettings config_path={self.config_path}>"
-
-def load_settings(config_path: Optional[Path] = None) -> AnimeSettings:
-    """Quick load settings from default or custom path"""
-    return AnimeSettings(config_path)
 
 def get_default_config_path(use_yaml: bool = True) -> Path:
     """Get the default config file path"""

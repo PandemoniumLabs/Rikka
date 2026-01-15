@@ -6,7 +6,7 @@ from textual.widgets import Static, Footer, Header, Button
 from ibuki import CSS_PATH
 from .search import SearchScreen
 from .settings import SettingsScreen
-from ..backend.backend_v3 import AnimeBackend
+from ..backend.backend import AnimeBackend
 from .continue_watching import ContinueWatchingScreen
 
 class IbukiHome(Screen):
@@ -47,7 +47,7 @@ class IbukiHome(Screen):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         button_id = event.button.id
         if button_id == "search":
-            self.app.push_screen(SearchScreen())
+            self.app.push_screen(SearchScreen(self.backend))
 
         elif button_id == "continue":
             self.app.push_screen(ContinueWatchingScreen(self.backend))

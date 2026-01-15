@@ -6,7 +6,7 @@ from textual.widgets import Static, Footer, Button, Input, Select, Label, Select
 from textual.widgets.selection_list import Selection
 
 from ibuki import CSS_PATH
-from ..backend.backend_v3 import AnimeBackend
+from ..backend.backend import AnimeBackend
 
 class SettingsScreen(Screen):
     BINDINGS = [
@@ -171,14 +171,14 @@ class SettingsScreen(Screen):
             self._show_status(f"Reset failed: {e} :(", "error")
 
     def action_go_back(self) -> None:
-        """Go back to previous screen"""
+        """Go back to a previous screen"""
         if self.modified:
             self.app.pop_screen()
         else:
             self.app.pop_screen()
 
     def _show_status(self, message: str, status_type: str = "info") -> None:
-        """Show temporary status message"""
+        """Show a temporary status message"""
         status = self.query_one("#status_message", Static)
         status.update(message)
         status.remove_class("success", "error", "warning", "info")

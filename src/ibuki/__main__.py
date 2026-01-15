@@ -1,6 +1,6 @@
 from textual.app import App
 from .screens.home import IbukiHome
-from .backend.backend_v3 import AnimeBackend
+from .backend.backend import AnimeBackend
 
 class Ibuki(App):
     def __init__(self, *args, **kwargs):

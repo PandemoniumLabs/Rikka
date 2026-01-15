@@ -1,25 +1,18 @@
-import re
-import html
 import json
 from pathlib import Path
 from datetime import datetime
+from platformdirs import user_data_dir
 
 from ..logs.logger import get_logger
-
-# Utils v3
-
-def clean_html(raw: str | None) -> str:
-    if not raw:
-        return "Not available :("
-
-    text = re.sub(r'<.*?>', '', raw).strip()
-    return html.unescape(text)
 
 PROGRESS_FILE = Path.home() / "Project-Ibuki" / "progress.json"
 
 class WatchHistory:
-    def __init__(self, file_path=PROGRESS_FILE):
-        self.file_path = file_path
+    def __init__(self):
+        self.data_dir = Path(user_data_dir("ibuki", "XeonXE534"))
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.file_path = self.data_dir / "progress.json"
+
         self.logger = get_logger("WatchHistory")
         self.history = self.load()
 
@@ -42,6 +35,9 @@ class WatchHistory:
             self.logger.error("Failed to save watch history: " + str(e) + ":/")
 
     def update_progress(self, anime_id, anime_name, episode, timestamp, total_duration):
+        if isinstance(anime_id, int):
+            self.logger.warning(f"Received memory ID for {anime_name}. History might not persist!")
+
         percent = 0
         if total_duration > 0:
             percent = round((timestamp / total_duration) * 100, 1)

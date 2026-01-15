@@ -3,8 +3,8 @@ from textual.widgets import Input, ListView, ListItem, Static, Footer
 from textual.app import ComposeResult
 
 from ibuki import CSS_PATH
-from ..backend.backend_v3 import AnimeBackend
-from ..backend.utils_v3 import clean_html
+from ..backend.backend import AnimeBackend
+from ..backend.utils import clean_html
 from .anime_detail import AnimeDetailScreen
 from .episode_view import EpisodeDetailScreen
 
@@ -57,7 +57,7 @@ class SearchScreen(Screen):
             list_view.append(list_item)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        """Handle when user clicks or presses enter on a list item"""
+        """Handle when a user clicks or presses enter on a list item"""
         selected_item = event.item
         anime = getattr(selected_item, 'anime', None)
 
@@ -65,7 +65,7 @@ class SearchScreen(Screen):
             print("[Error] Selected item has no anime data attached :(")
             return
 
-        self.app.push_screen(EpisodeDetailScreen(anime))
+        self.app.push_screen(EpisodeDetailScreen(anime, self.backend))
 
     def action_synopsis(self):
         list_view = self.query_one('#search_results', ListView)
