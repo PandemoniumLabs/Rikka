@@ -62,7 +62,7 @@ class IbukiHome(Screen):
         self.app.exit()
 
     def action_search(self) -> None:
-        self.app.push_screen(SearchScreen())
+        self.app.push_screen(SearchScreen(self.backend))
 
     def action_continue(self) -> None:
         self.app.push_screen(ContinueWatchingScreen(self.backend))
