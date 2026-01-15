@@ -6,7 +6,7 @@ from ..backend.backend_v3 import AnimeBackend
 from textual.widgets import Static, Footer, Header, Button
 
 class ContinueWatchingScreen(Screen):
-    CSS_PATH = str(CSS_PATH / "continue_watching_styles.css")
+    CSS_PATH = CSS_PATH / "continue_watching_styles.css"
     BINDINGS = [
         ("escape", "quit_app", "Quit")
     ]

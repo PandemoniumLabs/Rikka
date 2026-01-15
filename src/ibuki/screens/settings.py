@@ -14,7 +14,7 @@ class SettingsScreen(Screen):
         Binding("s", "save_settings", "Save", show=True),
         Binding("r", "reset_settings", "Reset", show=True),
     ]
-    CSS_PATH = str(CSS_PATH / "settings_styles.css")
+    CSS_PATH = CSS_PATH / "settings_styles.css"
 
     def __init__(self, backend: AnimeBackend):
         super().__init__()

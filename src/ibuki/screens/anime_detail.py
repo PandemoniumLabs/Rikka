@@ -9,7 +9,7 @@ class AnimeDetailScreen(Screen):
         ('escape', 'go_back', 'Go Back')
     ]
 
-    CSS_PATH = str(CSS_PATH / "details_styles.css")
+    CSS_PATH = CSS_PATH / "details_styles.css"
 
     def __init__(self, anime: Anime, synopsis: str):
         super().__init__()

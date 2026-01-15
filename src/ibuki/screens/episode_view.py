@@ -8,7 +8,7 @@ class EpisodeDetailScreen(Screen):
     BINDINGS = [
         ("escape", "go_back", "Go Back"),
     ]
-    CSS_PATH = str(CSS_PATH / "episode_styles.css")
+    CSS_PATH = CSS_PATH / "episode_styles.css"
 
     def __init__(self, anime):
         super().__init__()

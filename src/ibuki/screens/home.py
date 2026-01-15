@@ -10,7 +10,7 @@ from ..backend.backend_v3 import AnimeBackend
 from .continue_watching import ContinueWatchingScreen
 
 class IbukiHome(Screen):
-    CSS_PATH = str(CSS_PATH / "home_styles.css")
+    CSS_PATH = CSS_PATH / "home_styles.css"
     banner = """
 ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗   ██╗██████╗ ██╗   ██╗██╗  ██╗██╗       ██████╗ 
 ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝   ██║██╔══██╗██║   ██║██║ ██╔╝██║    ██╗╚════██╗
