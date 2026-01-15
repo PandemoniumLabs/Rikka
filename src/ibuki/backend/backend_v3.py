@@ -12,7 +12,6 @@ from anipy_api.provider.providers.allanime_provider import AllAnimeProvider
 
 # Animebackend v3
 
-
 class AnimeBackend:
     def __init__(self, settings: AnimeSettings = None):
         self.logger = get_logger("AnimeBackend")
@@ -123,9 +122,7 @@ class AnimeBackend:
         self.episodes_cache[anime_id] = episodes
         return episodes
 
-    def play_episode(
-        self, anime: Anime, episode: int, stream: ProviderStream, start_time: int = 0
-    ):
+    def play_episode(self, anime: Anime, episode: int, stream: ProviderStream, start_time: int = 0):
         """
         Play a specific episode using MPVPlayer with user-configurable settings.
         """
@@ -220,7 +217,7 @@ class AnimeBackend:
             self.logger.warning("No stream available to resume")
             return False
 
-        start_time = entry.get("timestamp", 0) + self.skip_intro_seconds
+        start_time = entry.get("timestamp", 0)
         self.play_episode(anime, entry["episode"], stream, start_time=start_time)
         return True
 

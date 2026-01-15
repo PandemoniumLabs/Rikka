@@ -6,7 +6,6 @@ from typing import Dict, Any, Optional
 from ..logs.logger import get_logger
 
 # Animesettings v1
-# 90% of the code in this file is by Claude lol
 
 class AnimeSettings:
     DEFAULT_SETTINGS = {
