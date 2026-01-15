@@ -1,9 +1,10 @@
-from ibuki import CSS_PATH
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.containers import Vertical
-from ..backend.backend_v3 import AnimeBackend
 from textual.widgets import Static, Footer, Header, Button
+
+from ibuki import CSS_PATH
+from ..backend.backend_v3 import AnimeBackend
 
 class ContinueWatchingScreen(Screen):
     CSS_PATH = CSS_PATH / "continue_watching_styles.css"

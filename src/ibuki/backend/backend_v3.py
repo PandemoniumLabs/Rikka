@@ -104,9 +104,7 @@ class AnimeBackend:
         return None
 
     def get_episodes(self, anime):
-        """
-        Get list of episodes for an anime, with caching.
-        """
+        """Get list of episodes for an anime, with caching."""
         anime_id = getattr(anime, "id", id(anime))
 
         if anime_id in self.episodes_cache:
@@ -240,4 +238,3 @@ class AnimeBackend:
 
     def _on_play_start(self, anime):
         self.logger.info(f"Playback started: {anime}")
-

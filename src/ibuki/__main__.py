@@ -3,9 +3,12 @@ from .screens.home import IbukiHome
 from .backend.backend_v3 import AnimeBackend
 
 class Ibuki(App):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.backend = AnimeBackend()
+
     def on_mount(self):
-        backend = AnimeBackend()
-        self.push_screen(IbukiHome(backend))
+        self.push_screen(IbukiHome(self.backend))
 
 app = Ibuki()
 

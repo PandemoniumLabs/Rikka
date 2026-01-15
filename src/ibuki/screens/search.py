@@ -3,7 +3,7 @@ from textual.widgets import Input, ListView, ListItem, Static, Footer
 from textual.app import ComposeResult
 
 from ibuki import CSS_PATH
-from ..backend.backend_v3 import AnimeBackend as backend
+from ..backend.backend_v3 import AnimeBackend
 from ..backend.utils_v3 import clean_html
 from .anime_detail import AnimeDetailScreen
 from .episode_view import EpisodeDetailScreen
@@ -14,6 +14,10 @@ class SearchScreen(Screen):
         ('s', 'synopsis', 'Synopsis')
     ]
     CSS_PATH = CSS_PATH / "search_styles.css"
+
+    def __init__(self, backend: AnimeBackend, **kwargs):  # ← Accept backend
+        super().__init__(**kwargs)
+        self.backend = backend
 
     def compose(self) -> ComposeResult:
         yield Input(placeholder='Search for anime :3', id='search_input')
@@ -30,7 +34,7 @@ class SearchScreen(Screen):
             list_view.append(ListItem(Static('Anime not found! :/')))
             return
 
-        anime_list = backend().get_anime_by_query(query)
+        anime_list = self.backend.get_anime_by_query(query)
         if not anime_list:
             list_view.append(ListItem(Static('Anime not found! :/')))
             return
