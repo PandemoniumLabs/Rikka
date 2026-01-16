@@ -1,7 +1,9 @@
-from ibuki import CSS_PATH
 from textual.screen import Screen
-from textual.widgets import Static, Footer
 from textual.app import ComposeResult
+from textual.widgets import Static, Footer
+
+from ibuki import CSS_PATH
+
 from anipy_api.anime import Anime
 
 class AnimeDetailScreen(Screen):

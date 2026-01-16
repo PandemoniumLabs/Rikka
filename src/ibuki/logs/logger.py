@@ -42,11 +42,6 @@ def get_logger(name: str = "ibuki") -> logging.Logger:
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
     logger.propagate = False
 
     return logger

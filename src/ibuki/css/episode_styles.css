@@ -18,3 +18,8 @@ Screen {
     height: auto;
     overflow: auto;
 }
+
+#loading_display {
+    background: #1e1e2e;
+    color: #F9F5A1;
+}

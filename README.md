@@ -1,7 +1,7 @@
 <div align="center">
     <img src="images/halo.png" alt="logo" />
     <br>
-    <img src="https://img.shields.io/badge/version-4.0.0--alpha.1-FF69B4?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-4.0.0--beta.1-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>
 </div>
 <br>
@@ -102,14 +102,14 @@ Once the script finishes its business, you can launch the project from anywhere 
 
 ## Notes
 
-- Only Linux fully supported as of 3.x.x releases.
+- Only Linux is fully supported as of 3.x.x releases.
 - MPV must be installed and available in your PATH for playback.
 ---
 
 ## Contributing
 
 Contributions welcome!
-Fork, tweak, and submit PRs, any improvements are welcome.
+Fork, tweak, and submit PRs. Any improvements are welcome.
 
 ---
 

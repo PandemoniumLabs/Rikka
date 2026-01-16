@@ -1,8 +1,10 @@
-from ibuki import CSS_PATH
+from textual import work
 from textual.screen import Screen
 from textual.app import ComposeResult
-from ..backend.backend import AnimeBackend
 from textual.widgets import ListView, ListItem, Static, Footer
+
+from ibuki import CSS_PATH
+from ..backend.backend import AnimeBackend
 
 class EpisodeDetailScreen(Screen):
     BINDINGS = [
@@ -19,14 +21,24 @@ class EpisodeDetailScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Static(self.anime.name, id="title")
         yield ListView(id="episode_list")
+        yield Static('', id='loading_display')
         yield Footer()
 
     def on_mount(self):
-        episode_list = self.query_one("#episode_list", ListView)
+        self.load_episodes()
+
+    @work(thread=True, exclusive=True, name='EpisodesWorker')
+    def load_episodes(self):
+        self.app.call_from_thread(self._set_loading_text, "Searching... :3")
         self.episodes = self.backend.get_episodes(self.anime)
+        self.app.call_from_thread(self.populate_list)
+        self.app.call_from_thread(self._set_loading_text, "")
+
+    def populate_list(self):
+        episode_list = self.query_one("#episode_list", ListView)
 
         if not self.episodes:
-            episode_list.append(ListItem(Static("No episodes found.")))
+            episode_list.append(ListItem(Static("No episodes found :(")))
             return
 
         for idx, ep_num in enumerate(self.episodes):
@@ -39,9 +51,7 @@ class EpisodeDetailScreen(Screen):
         """Handle when a user clicks or presses enter on an episode"""
         selected_item = event.item
         ep_index = getattr(selected_item, "index", None)
-
-        if ep_index is None:
-            return
+        if ep_index is None: return
 
         episode_number = self.episodes[ep_index]
 
@@ -52,7 +62,7 @@ class EpisodeDetailScreen(Screen):
         )
 
         if not stream:
-            self.app.notify("[Error] No stream available for this episode :(", severity="error", timeout=3)
+            self.app.notify("No stream available for this episode :(", severity="error", timeout=3)
             return
 
         anime_id = getattr(self.anime, "identifier", str(id(self.anime)))
@@ -63,6 +73,9 @@ class EpisodeDetailScreen(Screen):
             start_time = entry["timestamp"]
 
         self.backend.play_episode(self.anime, episode_number, stream, start_time)
+
+    def _set_loading_text(self, text: str):
+        self.query_one('#loading_display', Static).update(text)
 
     def action_go_back(self):
         self.app.pop_screen()

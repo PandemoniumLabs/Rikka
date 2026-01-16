@@ -1,47 +1,59 @@
+import sys
 import time
 import json
 import socket
 import threading
 import subprocess
+
 from pathlib import Path
 
 from ..logs.logger import get_logger
 
-# MPVControl v2
-
 class MPVControl:
-    def __init__(self, sock_path = Path.home() / "Project-Ibuki" / "mpv.sock"):
-        self.logger = get_logger("MPVControl")
-        self.sock_path = sock_path
+    def __init__(self):
+        self.is_windows = sys.platform == "win32"
+        self.ipc_path = r"\\.\pipe\ibuki-ipc" if self.is_windows else "/tmp/ibuki-ipc"
+
         self.process = None
         self.socket = None
         self.running = False
-        self._progress_thread = None
         self.on_exit = None
+        self._progress_thread = None
         self._recv_buffer = ""
         self.current_duration = None
         self._current_position = None
 
+        self.logger = get_logger("MPVControl")
+
     def _cleanup_socket(self):
+        if self.is_windows:
+            return
         try:
-            Path(self.sock_path).unlink()
+            Path(self.ipc_path).unlink()
         except FileNotFoundError:
             pass
         except Exception as e:
             self.logger.error(f"Failed to clean up socket: {e} :(")
 
     def launch(self, url, start_time=0, extra_args=None):
+        if self.process and self.process.poll() is None:
+            self.logger.info("Killing existing MPV instances...")
+            self.close()
+            time.sleep(0.2)
+
         if extra_args is None:
             extra_args = []
 
         self._cleanup_socket()
 
-        Path(self.sock_path).parent.mkdir(parents=True, exist_ok=True)
+        if not self.is_windows:
+            Path(self.ipc_path).parent.mkdir(parents=True, exist_ok=True)
+
         cmd = [
                   "mpv",
                   url,
                   f"--start={start_time}",
-                  f"--input-ipc-server={self.sock_path}",
+                  f"--input-ipc-server={self.ipc_path}",
                   "--force-window=immediate",
                   "--no-terminal",
                   "--idle=no",
@@ -49,14 +61,14 @@ class MPVControl:
                   "--msg-level=ipc=v",
               ] + extra_args
 
-        self.logger.info(f"Launching MPV with socket: {self.sock_path}")
+        self.logger.info(f"Launching MPV with socket: {self.ipc_path}")
         self.logger.debug(f"MPV command: {' '.join(cmd)}")
 
         try:
             self.process = subprocess.Popen(
                 cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
                 text=True
             )
         except Exception as e:
@@ -68,40 +80,54 @@ class MPVControl:
         self._current_position = None
         self._recv_buffer = ""
 
-        time.sleep(1.0)  # Increased from 0.5
-
-        if self.process.poll() is not None:
-            stdout, stderr = self.process.communicate()
-            self.logger.error(f"MPV died immediately! Exit code: {self.process.returncode} :(")
-            self.logger.error(f"STDOUT: {stdout}")
-            self.logger.error(f"STDERR: {stderr}")
-            self.running = False
-            return False
-
-        connected = self._connect_to_socket(max_attempts=30, delay=0.2)
-
+        connected = self._connect_to_ipc(max_attempts=30, delay=0.2)
         if not connected:
-            self.logger.error("Failed to connect to MPV socket!")
-            self.running = False
+            self.logger.error("Failed to connect to MPV IPC!")
+            self.close()
             return False
 
         threading.Thread(target=self._listen_ipc, daemon=True).start()
         return True
 
-    def _listen_ipc(self):
-        """Listen for JSON events from MPV with proper buffer handling."""
-        if not self.socket:
-            self.logger.error("Cannot start IPC listener - socket is None!")
-            return
+    def _connect_to_ipc(self, max_attempts=30, delay=0.2):
+        for attempt in range(max_attempts):
+            if self.process.poll() is not None:
+                return False
 
+            try:
+                if self.is_windows:
+                    self.socket = open(self.ipc_path, "w+b", buffering=0)
+                else:
+                    self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                    self.socket.connect(self.ipc_path)
+                    self.socket.settimeout(0.5)
+
+                self.logger.info(f"Connected to IPC on attempt {attempt + 1}")
+                return True
+
+            except Exception:
+                time.sleep(delay)
+
+        return False
+
+    def _listen_ipc(self):
         try:
             while self.running:
-                if not self._process_socket_data():
+                if self.is_windows:
+                    data = self.socket.read(4096)
+                else:
+                    data = self.socket.recv(4096)
+
+                if not data:
                     break
+
+                self._recv_buffer += data.decode("utf-8", errors="replace")
+                self._process_buffered_lines()
+
         except Exception as e:
-            self.logger.error(f"Error in MPV IPC listener: {e} :/")
+            if self.running:
+                self.logger.error(f"IPC Listener Error: {e} :/")
         finally:
-            self.running = False
             self.close()
 
     def _process_socket_data(self):
@@ -186,7 +212,7 @@ class MPVControl:
 
     def _socket_file_ready(self, delay):
         """Check if a socket file exists"""
-        if not Path(self.sock_path).exists():
+        if not Path(self.ipc_path).exists():
             time.sleep(delay)
             return False
         return True
@@ -196,7 +222,7 @@ class MPVControl:
         try:
             self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             self.socket.settimeout(2.0)
-            self.socket.connect(str(self.sock_path))
+            self.socket.connect(str(self.ipc_path))
             self.socket.settimeout(0.5)
             self.logger.info(f"Connected to MPV socket on attempt {attempt + 1}")
             return True
@@ -218,16 +244,21 @@ class MPVControl:
             self.socket = None
 
     def send(self, command, args=None, request_id=0):
-        """Send a command to MPV IPC with optional request_id for tracking responses."""
-        if args is None:
-            args = []
+        if not self.socket or not self.running:
+            return
 
+        if args is None: args = []
         try:
             payload = json.dumps({"command": [command] + args, "request_id": request_id})
-            self.socket.send(payload.encode("utf-8") + b"\n")
+            raw_payload = payload.encode("utf-8") + b"\n"
 
+            if self.is_windows:
+                self.socket.write(raw_payload)
+                self.socket.flush()
+            else:
+                self.socket.send(raw_payload)
         except Exception as e:
-            self.logger.error(f"Failed to send command to MPV: {e} :/")
+            self.logger.error(f"Failed to send command: {e}")
 
     def get_current_state(self):
         """Get current playback position and duration."""
@@ -272,16 +303,16 @@ class MPVControl:
 
     def close(self):
         self.running = False
-        if self.process:
-            try:
-                self.process.terminate()
-            except Exception as e:
-                self.logger.error(f"Failed to terminate MPV process: {e} :/")
-
         if self.socket:
             try:
                 self.socket.close()
-            except Exception as e:
-                self.logger.error(f"Failed to terminate MPV socket: {e} :/")
-                pass
+            except: pass
+            self.socket = None
+
+        if self.process:
+            try:
+                self.process.terminate()
+            except: pass
+            self.process = None
+
         self._cleanup_socket()
