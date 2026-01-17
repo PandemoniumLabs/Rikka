@@ -113,16 +113,8 @@ class MPVControl:
     def _listen_ipc(self):
         try:
             while self.running:
-                if self.is_windows:
-                    data = self.socket.read(4096)
-                else:
-                    data = self.socket.recv(4096)
-
-                if not data:
+                if not self._process_socket_data():
                     break
-
-                self._recv_buffer += data.decode("utf-8", errors="replace")
-                self._process_buffered_lines()
 
         except Exception as e:
             if self.running:
