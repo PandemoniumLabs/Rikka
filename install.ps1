@@ -197,7 +197,6 @@ Write-Host ""
 Write-Info "Run 'ibuki' to start using Project-Ibuki"
 Write-Host ""
 
-# Check if pipx bin directory is in PATH
 $pipxBinDir = & pipx environment 2>&1 | Select-String -Pattern "PIPX_BIN_DIR" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }
 
 if ($pipxBinDir -and ($env:PATH -notlike "*$pipxBinDir*")) {

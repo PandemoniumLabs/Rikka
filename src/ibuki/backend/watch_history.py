@@ -5,8 +5,6 @@ from platformdirs import user_data_dir
 
 from ..logs.logger import get_logger
 
-PROGRESS_FILE = Path.home() / "Project-Ibuki" / "progress.json"
-
 class WatchHistory:
     def __init__(self):
         self.data_dir = Path(user_data_dir("ibuki", "XeonXE534"))

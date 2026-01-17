@@ -36,15 +36,10 @@ class AnimeBackend:
         self.logger.debug(f"AnimeBackend ready with settings: {s.get_all()}")
 
     def get_anime_by_query(self, query):
-        """
-        Search for anime by query string.
-        Returns a list of Anime objects.
-        Caches results to avoid redundant searches.
-        """
+        """Search for anime by query string. Returns a list of Anime objects"""
         self.logger.info(f"Searching for: {query} :]")
         try:
             results = self.provider.get_search(query)
-
         except Exception as e:
             self.logger.exception(f"Error during search: {str(e)} :/")
             return []
@@ -54,14 +49,16 @@ class AnimeBackend:
             return []
 
         anime_list = []
-        for i, r in enumerate(results):
-            key = getattr(r, "id", i)
-            if key in self.cache:
-                anime = self.cache[key]
+        for r in results:
+            anime = Anime.from_search_result(self.provider, r)
+            anime_id = getattr(anime, "identifier", None)
 
-            else:
-                anime = Anime.from_search_result(self.provider, r)
-                self.cache[key] = anime
+            if anime_id:
+                cached_anime = self.cache.get(anime_id)
+                if cached_anime:
+                    anime = cached_anime
+                else:
+                    self.cache[anime_id] = anime
             anime_list.append(anime)
 
         return anime_list
@@ -162,9 +159,7 @@ class AnimeBackend:
         )
 
     def resume_anime(self, anime_id, quality: int = None):
-        """
-        Resume anime playback from watch history, using user settings.
-        """
+        """Resume anime playback from watch history, using user settings."""
         quality = quality or self.global_quality
         entry = self.watch_history.get_entry(anime_id)
 

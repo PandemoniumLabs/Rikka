@@ -30,20 +30,18 @@ class SearchScreen(Screen):
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         query = event.input.value.strip()
-        if not query:
-            return
+
+        list_view = self.query_one('#search_results', ListView)
+        list_view.clear()
 
         self.do_search(query)
-
-    @work(thread=True, exclusive=True, name='SearchWorker')
-    def do_search(self, query: str) -> None:
-        list_view = self.query_one('#search_results', ListView)
-        self.app.call_from_thread(list_view.clear)
-        self.app.call_from_thread(self._set_loading_text, "Searching... :3")
-
         if not query:
             list_view.append(ListItem(Static('Anime not found! :/')))
             return
+
+    @work(thread=True, exclusive=True, name='SearchWorker')
+    def do_search(self, query: str) -> None:
+        self.app.call_from_thread(self._set_loading_text, "Searching... :3")
 
         anime_list = self.backend.get_anime_by_query(query)
         if not anime_list:
@@ -51,19 +49,17 @@ class SearchScreen(Screen):
             return
 
         for idx, anime in enumerate(anime_list):
+
             try:
                 info = anime.get_info()
                 title = info.name
                 synopsis = clean_html(info.synopsis)
-
                 self.app.call_from_thread(self.add_result_item, anime, title, synopsis, idx)
+
             except Exception as e:
                 self.logger.error(f"Failed to load info for an item: {e}")
 
         self.app.call_from_thread(self._set_loading_text, "")
-
-    def _set_loading_text(self, text: str):
-        self.query_one('#loading_display', Static).update(text)
 
     def add_result_item(self, anime, title, synopsis, idx):
         list_view = self.query_one('#search_results', ListView)
@@ -83,6 +79,9 @@ class SearchScreen(Screen):
             return
 
         self.app.push_screen(EpisodeDetailScreen(anime, self.backend))
+
+    def _set_loading_text(self, text: str):
+        self.query_one('#loading_display', Static).update(text)
 
     def action_synopsis(self):
         list_view = self.query_one('#search_results', ListView)
