@@ -16,7 +16,7 @@ A sleek, interactive TUI application for browsing and watching anime, powered by
 * **Rich Terminal Interface** – Interactive TUI with mouse support
 * **Reliable Backend** – Fast-ish synchronous anime fetching using `anipy-api`
 * **Modern UX** – Browse anime with panels, tabs, and real-time updates
-* **Episode Management** – Queue episodes, track progress*, seamless playback
+* **Episode Management** – Queue episodes, track progress, seamless playback
 * **Fast Releases** – Quickly access the latest anime releases
 
 ---
@@ -61,6 +61,7 @@ The TUI experience on Windows varies by terminal. For best results, use **Window
 ![Search screen](images/search.png)
 ![Anime Details screen](images/synopsis.png)
 ![Episodes screen](images/ep.png)
+![Settings screen](images/settings.png)
 
 ---
 

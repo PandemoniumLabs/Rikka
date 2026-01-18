@@ -156,7 +156,6 @@ class MPVControl:
 
     def _handle_ipc_message(self, msg):
         """Process a parsed IPC message"""
-        # Handle successful responses with data
         if msg.get("error") == "success" and "data" in msg:
             self._handle_response_data(msg)
 
@@ -218,9 +217,11 @@ class MPVControl:
             self.socket.settimeout(0.5)
             self.logger.info(f"Connected to MPV socket on attempt {attempt + 1}")
             return True
+
         except (ConnectionRefusedError, FileNotFoundError) as e:
             self.logger.debug(f"Attempt {attempt + 1}: {e}")
             return False
+
         except Exception as e:
             self.logger.error(f"Unexpected socket error on attempt {attempt + 1}: {e}")
             return False
