@@ -41,7 +41,7 @@ class IbukiHome(Screen):
             Button("Quit", id="quit"),
             classes="menu"
         )
-        yield Static("v4.0.0--beta.3", classes="footer-note")
+        yield Static("v4.0.0", classes="footer-note")
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

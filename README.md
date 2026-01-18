@@ -1,7 +1,7 @@
 <div align="center">
     <img src="images/halo.png" alt="logo" />
     <br>
-    <img src="https://img.shields.io/badge/version-4.0.0--beta.3-FF69B4?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-4.0.0-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>
 </div>
 <br>
@@ -21,61 +21,35 @@ A sleek, interactive TUI application for browsing and watching anime, powered by
 
 ---
 
----
-
 ## Installation
 
-
-<details>
-<summary> Linux & macOS (Bash)</summary>
-
-Run this to install or upgrade Ibuki instantly:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.sh | bash
+### Linux
 
 ```
-
->*For a hard reset, run this instead:*
-
-```bash
-curl -sSL https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.sh | bash -s -- --hard-reset
-
+git clone https://github.com/XeonXE534/Project-Ibuki.git
+cd Project-Ibuki
+    
+bash ./install.sh
 ```
+After installation, you can run Project-Ibuki anywhere using: `ibuki`
 
-</details>
+### Windows (Experimental)
+The TUI experience on Windows varies by terminal. For best results, use **Windows Terminal**.
 
-<details>
-<summary> Windows (PowerShell)</summary>
+1. Install Python 3.10+ and MPV (ensure they are in your PATH).
+2. `git clone https://github.com/XeonXE534/Project-Ibuki.git`
+3. `cd Project-Ibuki`
+4. `pip install -e .`
+5. `python -m src.ibuki.__main__`
 
-Open PowerShell as User and run this:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.ps1'))
-
-```
-
->*For a hard reset, run this instead:*
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; $script = (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/XeonXE534/Project-Ibuki/main/install.ps1'); Invoke-Expression "& { $script } --hard-reset"
-
-```
-
-</details>
-
----
-
-### Post-Installation
-
-Once the script finishes its business, you can launch the project from anywhere by simply typing: `ibuki`
+*Note: Windows support is spotty. DO NOT USE `install.ps1` it is not working as intended*
 
 ---
 
 ## Requirements
 
 * **Python 3.10+**
-* **Terminal** with True Color support (Kitty is recommended)
+* **Terminal with True Color support**
 * **PiP packages** (installed via `install.sh`)
 * **MPV**
 
@@ -96,14 +70,17 @@ Once the script finishes its business, you can launch the project from anywhere 
 * [x] Enhanced episode browsing and search
 * [x] Watch history
 * [x] User preferences
-* [ ] Cross-platform distribution
+* [x] Cross-platform distribution
 
 ---
 
 ## Notes
 
-- Only Linux is fully supported as of 3.x.x releases.
+- Linux & Windows supported as of 4.0.0. (Windows support is spotty).
 - MPV must be installed and available in your PATH for playback.
+- There will not be further major releases to the TUI after 4.0.0. Only critical bug fixes, compatibility fixes, and GUI updates, no new features.
+- GUI version is in development
+
 ---
 
 ## Contributing
