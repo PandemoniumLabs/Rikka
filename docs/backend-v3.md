@@ -56,7 +56,7 @@ Search for anime by name.
 * Safe to call synchronously from a CLI or Textual frontend.
 
 ```python
-results = backend.get_anime_by_query("Frieren")
+results = backend.search_anime("Frieren")
 ```
 
 ---

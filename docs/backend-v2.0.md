@@ -34,7 +34,7 @@ Creates a new backend instance with `AllAnimeProvider` as the default (and only)
   * Fully synchronous; safe to call from a Textual frontend.
 
 ```python
-results = backend.get_anime_by_query("Blue Archive")
+results = backend.search_anime("Blue Archive")
 ```
 
 ---

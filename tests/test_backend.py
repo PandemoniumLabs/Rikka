@@ -103,12 +103,12 @@ class TestSearchAndCache:
         )
 
         # First call
-        results1 = backend.get_anime_by_query("test")
+        results1 = backend.search_anime("test")
         assert len(results1) == 2
         assert call_count["count"] == 1
 
         # Second call should use cache
-        results2 = backend.get_anime_by_query("test")
+        results2 = backend.search_anime("test")
         assert len(results2) == 2
         assert results1[0].id == results2[0].id
         # Anime objects should be from cache, not re-created
@@ -118,14 +118,14 @@ class TestSearchAndCache:
         """Search should return empty list on provider failure"""
         backend.provider.get_search = Mock(side_effect=ConnectionError("API down"))
 
-        results = backend.get_anime_by_query("test")
+        results = backend.search_anime("test")
         assert results == []
 
     def test_search_handles_empty_results(self, backend):
         """Empty search results should be handled gracefully"""
         backend.provider.get_search = Mock(return_value=[])
 
-        results = backend.get_anime_by_query("nonexistent_anime_12345")
+        results = backend.search_anime("nonexistent_anime_12345")
         assert results == []
 
     def test_concurrent_cache_access(self, backend, monkeypatch):
@@ -143,7 +143,7 @@ class TestSearchAndCache:
 
         def search_worker():
             try:
-                backend.get_anime_by_query("test")
+                backend.search_anime("test")
             except Exception as e:
                 errors.append(e)
 

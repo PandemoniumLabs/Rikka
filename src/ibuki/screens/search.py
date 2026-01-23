@@ -43,7 +43,7 @@ class SearchScreen(Screen):
     def do_search(self, query: str) -> None:
         self.app.call_from_thread(self._set_loading_text, "Searching... :3")
 
-        anime_list = self.backend.get_anime_by_query(query)
+        anime_list = self.backend.search_anime(query)
         if not anime_list:
             self.app.call_from_thread(self._set_loading_text, "Anime not found! :/")
             return

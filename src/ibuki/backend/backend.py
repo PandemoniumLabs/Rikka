@@ -1,8 +1,12 @@
+import os
+from pathlib import Path
 from typing import Optional
+from  diskcache import Cache
+from platformdirs import user_cache_dir
 
 from .utils import get_referrer_for_url
 from .mpv_control import MPVControl
-from ..logs.logger import get_logger
+from ..utils.logger import get_logger
 from .watch_history import WatchHistory
 from .settings_control import AnimeSettings
 
@@ -13,9 +17,12 @@ from anipy_api.provider.providers.allanime_provider import AllAnimeProvider
 class AnimeBackend:
     def __init__(self, settings: AnimeSettings = None):
         self.logger = get_logger("AnimeBackend")
+        cache_dir = Path(user_cache_dir("Ibuki"))
+        cache_dir.mkdir(parents=True, exist_ok=True)
+
+        self.cache_path = str(cache_dir / "cache_data")
+        self.cache = Cache(self.cache_path)
         self.provider = AllAnimeProvider()
-        self.cache = {}
-        self.episodes_cache = {}
         self.watch_history = WatchHistory()
         self.player = MPVControl()
         self.current_anime = None
@@ -35,39 +42,27 @@ class AnimeBackend:
 
         self.logger.debug(f"AnimeBackend ready with settings: {s.get_all()}")
 
-    def get_anime_by_query(self, query):
-        """Search for anime by query string. Returns a list of Anime objects"""
+    def search_anime(self, query):
+        """Search for anime by query string"""
         self.logger.info(f"Searching for: {query} :]")
+
+        search_key = f"search_{query.lower().replace(' ', '_')}"
+        if search_key in self.cache:
+            return self.cache[search_key]
+
         try:
             results = self.provider.get_search(query)
+            anime_list = [Anime.from_search_result(self.provider, r) for r in results]
+
+            self.cache.set(search_key, anime_list, expire=3600)
+            return anime_list
+
         except Exception as e:
-            self.logger.exception(f"Error during search: {str(e)} :/")
+            self.logger.exception(f"Error during search: {e} :/")
             return []
-
-        if not results:
-            self.logger.warning("No results found :(")
-            return []
-
-        anime_list = []
-        for r in results:
-            anime = Anime.from_search_result(self.provider, r)
-            anime_id = getattr(anime, "identifier", None)
-
-            if anime_id:
-                cached_anime = self.cache.get(anime_id)
-                if cached_anime:
-                    anime = cached_anime
-                else:
-                    self.cache[anime_id] = anime
-            anime_list.append(anime)
-
-        return anime_list
 
     def get_episode_stream(self, anime, episode, quality) -> Optional[ProviderStream]:
-        """
-        Return a single ProviderStream (best matching quality) or None.
-        Accepts provider returning either a single ProviderStream or a list.
-        """
+        """Return a single ProviderStream (best matching quality) or None"""
         try:
             stream = anime.get_video(
                 episode=episode, lang=LanguageTypeEnum.SUB, preferred_quality=quality
@@ -85,17 +80,19 @@ class AnimeBackend:
     def get_episodes(self, anime):
         """Get a list of episodes for anime, with caching."""
         anime_id = anime.identifier
+        key = f"eps_{anime_id}"
 
-        if anime_id in self.episodes_cache:
-            return self.episodes_cache[anime_id]
+        if key in self.cache:
+            return self.cache[key]
 
         try:
-            episodes = anime.get_episodes(lang=self.settings.get("language", LanguageTypeEnum.SUB))
-            self.episodes_cache[anime_id] = episodes
+            lang = self.settings.get("language", LanguageTypeEnum.SUB)
+            episodes = anime.get_episodes(lang=lang)
+            self.cache.set(key, episodes, expire=43200)
             return episodes
 
         except Exception as e:
-            self.logger.exception(f"Error fetching episodes for {anime.name}: {e}")
+            self.logger.exception(f"Error fetching episodes for {anime.name}: {e} :(")
             return []
 
     def play_episode(self, anime: Anime, episode: int, stream: ProviderStream, start_time: int = 0):
@@ -119,36 +116,7 @@ class AnimeBackend:
             f"start_time: {start_time}"
         )
 
-        def on_mpv_exit():
-            """Called when MPV closes, save watch history"""
-            self.logger.info(
-                f"MPV closed, saving history for {anime_name} EP:{episode} :)"
-            )
-            try:
-                elapsed = self.player.get_elapsed_time()
-                duration = self.player.current_duration or (elapsed + 300)
-                self.watch_history.update_progress(
-                    anime_id, anime_name, episode, elapsed, duration
-                )
-
-                if self.auto_next_episode:
-                    next_ep = episode + 1
-                    episodes = self.get_episodes(anime)
-
-                    if next_ep <= len(episodes):
-                        next_stream = self.get_episode_stream(
-                            anime, next_ep, self.global_quality
-                        )
-                        if next_stream:
-                            self.logger.info(
-                                f"Auto-playing next episode: EP{next_ep} :3"
-                            )
-                            self.play_episode(anime, next_ep, next_stream)
-
-            except Exception as e:
-                self.logger.debug(f"Failed to save final progress: {e} :/")
-
-        self.player.on_exit = on_mpv_exit
+        self.player.on_exit = lambda: self.on_mpv_exit(anime=anime, episode=episode, anime_id=anime_id, anime_name=anime_name)
         self.player.launch(url, start_time=start_time, extra_args=extra_args)
 
         self.player.start_progress_tracker(
@@ -157,6 +125,31 @@ class AnimeBackend:
             ),
             interval=self.save_progress_interval,
         )
+
+    def on_mpv_exit(self, anime: Anime, episode: int, anime_id: str, anime_name: str):
+        """Called when MPV closes, save watch history"""
+
+        self.logger.info(f"MPV closed, saving history for {anime_name} EP:{episode} :)")
+        try:
+            elapsed = self.player.get_elapsed_time()
+            duration = self.player.current_duration or (elapsed + 300)
+            self.watch_history.update_progress(
+                anime_id, anime_name, episode, elapsed, duration
+            )
+
+            if self.auto_next_episode:
+                next_ep = episode + 1
+                episodes = self.get_episodes(anime)
+
+                if next_ep <= len(episodes):
+                    next_stream = self.get_episode_stream(anime, next_ep, self.global_quality)
+
+                    if next_stream:
+                        self.logger.info(f"Auto-playing next episode: EP{next_ep} :3")
+                        self.play_episode(anime, next_ep, next_stream)
+
+        except Exception as e:
+            self.logger.debug(f"Failed to save final progress: {e} :/")
 
     def resume_anime(self, anime_id, quality: int = None):
         """Resume anime playback from watch history, using user settings."""
@@ -168,8 +161,8 @@ class AnimeBackend:
             return False
 
         anime = (
-            self.cache.get(anime_id)
-            or (self.get_anime_by_query(entry["anime_name"]) or [None])[0]
+                self.cache.get(anime_id)
+                or (self.search_anime(entry["anime_name"]) or [None])[0]
         )
         if not anime:
             self.logger.error("Could not find anime to resume :/")
