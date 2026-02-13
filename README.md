@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/halo.png" alt="logo" />
+    <img src="images/rikka.png" alt="logo" />
     <br>
     <img src="https://img.shields.io/badge/version-5.0.0-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>
@@ -59,9 +59,6 @@ The TUI experience on Windows varies by terminal. For best results, use **Window
 
 ![Home screen](images/home.png)
 ![Search screen](images/search.png)
-![Anime Details screen](images/synopsis.png)
-![Episodes screen](images/ep.png)
-![Settings screen](images/settings.png)
 
 ---
 

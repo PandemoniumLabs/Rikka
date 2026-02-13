@@ -1,21 +1,22 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
-name = "Project-Ibuki"
-version = "4.1.0"
+name = "rikka"
+version = "5.0.0"
 description = "Modern Terminal UI for anime streaming"
-authors = [{ name="XeonXE534", email="XeonXE1@proton.me" }]
+authors = [{ name = "XeonXE534", email = "XeonXE1@proton.me" }]
 readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "GPL-3.0" }
 
 dependencies = [
     "textual>=0.45.0",
     "anipy-api>=3.0.0,<4.0.0",
     "pyaml",
     "platformdirs",
-    "diskcache"
+    "diskcache",
 ]
 
 [project.optional-dependencies]
@@ -25,15 +26,31 @@ dev = [
     "textual-dev",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/rikka/**",
+    "README.md",
+]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["ibuki*"]
-
-[tool.setuptools.package-data]
-ibuki = ["css/*.css"]
+[tool.hatch.build.targets.wheel]
+include = ["src/rikka/**"]
 
 [project.scripts]
-ibuki = "ibuki.__main__:run"
+rikka = "rikka.__main__:run"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+
+[project.urls]
+Homepage = "https://github.com/PandemoniumLabs/Rikka"
+Issues = "https://github.com/PandemoniumLabs/Rikka/issues"
