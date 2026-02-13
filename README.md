@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/rikka.png" alt="logo" />
+    <img src="images/rikka-full.png" alt="logo" />
     <br>
     <img src="https://img.shields.io/badge/version-5.0.0-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>

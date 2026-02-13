@@ -36,7 +36,7 @@ include = [
 include = ["src/rikka/**"]
 
 [project.scripts]
-rikka = "rikka.__main__:run"
+rikka = "src.rikka.__main__:run"
 
 [tool.ruff]
 line-length = 100

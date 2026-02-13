@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Any
 from platformdirs import user_config_dir
 
-from rikka.utils.logger import get_logger
+from src.rikka.utils.logger import get_logger
 
 class AnimeSettings:
     DEFAULT_SETTINGS = {

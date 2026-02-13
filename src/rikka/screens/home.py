@@ -3,11 +3,11 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Static, Footer, Header, Button
 
-from rikka import CSS_PATH
-from .search import SearchScreen
-from .settings import SettingsScreen
-from ..backend.backend import AnimeBackend
-from .continue_watching import ContinueWatchingScreen
+from src.rikka import CSS_PATH
+from src.rikka.screens.search import SearchScreen
+from src.rikka.screens.settings import SettingsScreen
+from src.rikka.backend.backend import AnimeBackend
+from src.rikka.screens.continue_watching import ContinueWatchingScreen
 
 class Home(Screen):
     CSS_PATH = CSS_PATH / "home_styles.css"
@@ -41,7 +41,7 @@ class Home(Screen):
             Button("Quit", id="quit"),
             classes="menu"
         )
-        yield Static("v4.1.0", classes="footer-note")
+        yield Static("v5.0.0", classes="footer-note")
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

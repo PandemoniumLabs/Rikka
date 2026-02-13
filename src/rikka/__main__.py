@@ -1,7 +1,7 @@
 from textual.app import App
 
-from rikka.screens.home import Home
-from rikka.backend.backend import AnimeBackend
+from src.rikka.screens.home import Home
+from src.rikka.backend.backend import AnimeBackend
 
 class Rikka(App):
     def __init__(self, *args, **kwargs):

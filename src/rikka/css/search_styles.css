@@ -1,29 +1,29 @@
 Screen {
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 #search_results {
     margin: 0 2;
     margin-bottom: 1;
     margin-top: 1;
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
     overflow: auto;
 }
 
 #search_input {
     margin: 0 2;
     margin-top: 1;
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
     height: 3;
 }
 
 #loading_display {
-    background: #1e1e2e;
-    color: #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
 }

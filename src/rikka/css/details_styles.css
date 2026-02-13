@@ -1,18 +1,18 @@
 Screen {
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 .detail_title {
     text-align: center;
     text-style: bold;
-    color: #F9F5A1;
+    color: #D9EAFD;
 }
 
 .detail_synopsis{
     margin: 5 2;
-    background: #1e1e2e;
-    border: round #F9F5A1;
+    background: #000000;
+    border: round #D9EAFD;
     height: auto;
 }

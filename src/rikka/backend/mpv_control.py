@@ -7,7 +7,7 @@ import subprocess
 
 from pathlib import Path
 
-from rikka.utils.logger import get_logger
+from src.rikka.utils.logger import get_logger
 
 class MPVControl:
     def __init__(self):

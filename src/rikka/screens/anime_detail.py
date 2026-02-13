@@ -2,7 +2,7 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Static, Footer
 
-from rikka import CSS_PATH
+from src.rikka import CSS_PATH
 
 from anipy_api.anime import Anime
 

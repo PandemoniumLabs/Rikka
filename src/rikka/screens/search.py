@@ -3,12 +3,12 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Input, ListView, ListItem, Static, Footer
 
-from rikka import CSS_PATH
-from rikka.utils.general import clean_html
-from rikka.utils.logger import get_logger
-from ..backend.backend import AnimeBackend
-from .anime_detail import AnimeDetailScreen
-from .episode_view import EpisodeDetailScreen
+from src.rikka import CSS_PATH
+from src.rikka.utils.general import clean_html
+from src.rikka.utils.logger import get_logger
+from src.rikka.backend.backend import AnimeBackend
+from src.rikka.screens.anime_detail import AnimeDetailScreen
+from src.rikka.screens.episode_view import EpisodeDetailScreen
 
 class SearchScreen(Screen):
     BINDINGS = [

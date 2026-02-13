@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from platformdirs import user_data_dir
 
-from rikka.utils.logger import get_logger
+from src.rikka.utils.logger import get_logger
 
 class WatchHistory:
     def __init__(self):

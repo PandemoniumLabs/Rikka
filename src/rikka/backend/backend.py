@@ -3,11 +3,11 @@ from typing import Optional
 from diskcache import Cache
 from platformdirs import user_cache_dir
 
-from rikka.utils.logger import get_logger
-from rikka.utils.general import get_referrer_for_url
-from rikka.backend.mpv_control import MPVControl
-from rikka.backend.watch_history import WatchHistory
-from rikka.backend.settings_control import AnimeSettings
+from src.rikka.utils.logger import get_logger
+from src.rikka.utils.general import get_referrer_for_url
+from src.rikka.backend.mpv_control import MPVControl
+from src.rikka.backend.watch_history import WatchHistory
+from src.rikka.backend.settings_control import AnimeSettings
 
 from anipy_api.anime import Anime
 from anipy_api.provider import ProviderStream, LanguageTypeEnum

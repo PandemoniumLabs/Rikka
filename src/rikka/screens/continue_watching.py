@@ -3,8 +3,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Static, Footer, Header, Button
 
-from rikka import CSS_PATH
-from ..backend.backend import AnimeBackend
+from src.rikka import CSS_PATH
+from src.rikka.backend.backend import AnimeBackend
 
 class ContinueWatchingScreen(Screen):
     CSS_PATH = CSS_PATH / "continue_watching_styles.css"

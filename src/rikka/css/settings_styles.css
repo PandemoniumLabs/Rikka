@@ -1,7 +1,7 @@
 #settings_container {
     width: 100%;
     height: 100%;
-    background: #1e1e2e;
+    background: #000000;
 }
 
 
@@ -9,22 +9,22 @@
     width: 100%;
     height: 1fr;
     padding: 1 2;
-    background: #1e1e2e;
-    color: #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
 }
 
 .section-header {
     width: 100%;
     margin-top: 1;
     margin-bottom: 0;
-    color: #F9F5A1;
+    color: #D9EAFD;
 }
 
 .setting-label {
     width: 100%;
     margin-top: 1;
     margin-bottom: 0;
-    color: #F9F5A1;
+    color: #D9EAFD;
 }
 
 .setting-widget {
@@ -36,9 +36,9 @@
     width: 100%;
     height: auto;
     margin-bottom: 2;
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 #settings_actions {
@@ -46,16 +46,16 @@
     width: 100%;
     height: auto;
     padding: 1;
-    background: #1e1e2e;
+    background: #000000;
     align: center middle;
 }
 
 #settings_actions Button {
     margin: 0 1;
     min-width: 15;
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 #settings_actions Button:hover {
@@ -63,26 +63,26 @@
 }
 
 #settings_actions Button:focus {
-    border: heavy #F9F5A1;
+    border: heavy #D9EAFD;
 }
 
 
 Input {
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 Input:focus {
-    border: heavy #F9F5A1;
+    border: heavy #D9EAFD;
 }
 
 Select {
-    background: #1e1e2e;
-    color: #F9F5A1;
-    border: round #F9F5A1;
+    background: #000000;
+    color: #D9EAFD;
+    border: round #D9EAFD;
 }
 
 Select:focus {
-    border: heavy #F9F5A1;
+    border: heavy #D9EAFD;
 }
