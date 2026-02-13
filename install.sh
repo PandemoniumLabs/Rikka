@@ -51,8 +51,8 @@ if $HARD_RESET; then
 fi
 
 # Display header
-if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/rikka.png" ]]; then
-  kitty +kitten icat images/halo.png
+if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/rikka-full.png" ]]; then
+  kitty +kitten icat images/rikka-full.png
   echo ""
 else
   echo -e "${CYAN}"
