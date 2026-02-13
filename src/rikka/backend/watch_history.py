@@ -3,11 +3,11 @@ from pathlib import Path
 from datetime import datetime
 from platformdirs import user_data_dir
 
-from ..logs.logger import get_logger
+from rikka.utils.logger import get_logger
 
 class WatchHistory:
     def __init__(self):
-        self.data_dir = Path(user_data_dir("ibuki", "XeonXE534"))
+        self.data_dir = Path(user_data_dir("rikka", "XeonXE534"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.file_path = self.data_dir / "progress.json"
 

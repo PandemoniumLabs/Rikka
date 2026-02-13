@@ -1,14 +1,13 @@
-import os
 from pathlib import Path
 from typing import Optional
-from  diskcache import Cache
+from diskcache import Cache
 from platformdirs import user_cache_dir
 
-from .utils import get_referrer_for_url
-from .mpv_control import MPVControl
-from ..utils.logger import get_logger
-from .watch_history import WatchHistory
-from .settings_control import AnimeSettings
+from rikka.utils.logger import get_logger
+from rikka.utils.general import get_referrer_for_url
+from rikka.backend.mpv_control import MPVControl
+from rikka.backend.watch_history import WatchHistory
+from rikka.backend.settings_control import AnimeSettings
 
 from anipy_api.anime import Anime
 from anipy_api.provider import ProviderStream, LanguageTypeEnum
@@ -17,7 +16,7 @@ from anipy_api.provider.providers.allanime_provider import AllAnimeProvider
 class AnimeBackend:
     def __init__(self, settings: AnimeSettings = None):
         self.logger = get_logger("AnimeBackend")
-        cache_dir = Path(user_cache_dir("Ibuki"))
+        cache_dir = Path(user_cache_dir("Rikka"))
         cache_dir.mkdir(parents=True, exist_ok=True)
 
         self.cache_path = str(cache_dir / "cache_data")

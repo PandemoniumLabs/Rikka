@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Static, Footer, Header, Button
 
-from ibuki import CSS_PATH
+from rikka import CSS_PATH
 from ..backend.backend import AnimeBackend
 
 class ContinueWatchingScreen(Screen):

@@ -4,7 +4,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-APP_NAME = "Ibuki"
+APP_NAME = "Rikka"
 
 def get_log_dir() -> Path:
     if sys.platform.startswith("win"):
@@ -14,13 +14,13 @@ def get_log_dir() -> Path:
     base = Path(os.getenv("XDG_STATE_HOME", Path.home() / ".local" / "state"))
     return base / APP_NAME.lower() / "log"
 
-def get_logger(name: str = "ibuki") -> logging.Logger:
+def get_logger(name: str = "rikka") -> logging.Logger:
     logger = logging.getLogger(name)
 
     if logger.handlers:
         return logger
 
-    log_level = os.getenv("IBUKI_LOG_LEVEL", "DEBUG").upper()
+    log_level = os.getenv("RIKKA_LOG_LEVEL", "DEBUG").upper()
     logger.setLevel(getattr(logging, log_level, logging.DEBUG))
 
     log_dir = get_log_dir()

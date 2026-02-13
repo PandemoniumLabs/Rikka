@@ -5,7 +5,7 @@ from textual.screen import Screen
 from textual.widgets import Static, Footer, Button, Input, Select, Label, SelectionList
 from textual.widgets.selection_list import Selection
 
-from ibuki import CSS_PATH
+from rikka import CSS_PATH
 from ..backend.backend import AnimeBackend
 
 class SettingsScreen(Screen):

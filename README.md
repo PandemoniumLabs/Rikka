@@ -1,7 +1,7 @@
 <div align="center">
     <img src="images/halo.png" alt="logo" />
     <br>
-    <img src="https://img.shields.io/badge/version-4.1.0-FF69B4?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-5.0.0-FF69B4?style=for-the-badge" />
     <img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge"/>
 </div>
 <br>
@@ -26,23 +26,23 @@ A sleek, interactive TUI application for browsing and watching anime, powered by
 ### Linux
 
 ```
-git clone https://github.com/XeonXE534/Project-Ibuki.git
-cd Project-Ibuki
+git clone https://github.com/PandemoniumLabs/Rikka.git
+cd Rikka
     
 bash ./install.sh
 ```
-After installation, you can run Project-Ibuki anywhere using: `ibuki`
+After installation, you can run Rikka anywhere using: `rikka`
 
 ### Windows (Experimental)
 The TUI experience on Windows varies by terminal. For best results, use **Windows Terminal**.
 
 1. Install Python 3.10+ and MPV (ensure they are in your PATH).
-2. `git clone https://github.com/XeonXE534/Project-Ibuki.git`
-3. `cd Project-Ibuki`
+2. `git clone https://github.com/PandemoniumLabs/Rikka.git`
+3. `cd Rikka`
 4. `pip install -e .`
-5. `python -m src.ibuki.__main__`
+5. `python -m src.rikka.__main__`
 
-*Note: Windows support is spotty. DO NOT USE `install.ps1` it is not working as intended*
+*Note: Windows support is spotty.*
 
 ---
 
@@ -77,9 +77,9 @@ The TUI experience on Windows varies by terminal. For best results, use **Window
 
 ## Notes
 
-- Linux & Windows supported as of 4.0.0. (Windows support is spotty).
+- Linux & Windows supported as of 5.0.0. (Windows support is spotty).
 - MPV must be installed and available in your PATH for playback.
-- There will not be further major releases to the TUI after 4.0.0. Only critical bug fixes, compatibility fixes, and GUI updates, no new features.
+- There will not be further major releases to the TUI after 5.0.0. Only critical bug fixes, compatibility fixes, and GUI updates, no new features.
 - GUI version is in development
 
 ---
@@ -102,13 +102,3 @@ GPL 3.0 – see LICENSE file for details
 - UI: [Textual](https://github.com/textualize/textual/)
 
 *Built with ❤️ for the anime community*
-
----
-
-## Disclaimer
-
-Project-Ibuki is an independent, open-source project and is not affiliated with, endorsed, or sponsored by Nexon Games, Yostar, or Blue Archive.
-The character Ibuki and related assets belong to Nexon Games Co., Ltd.
-All character references are for fan and educational purposes only.
-
-If you are a copyright holder and believe any content used here violates your rights, please open an issue or contact me — I'll remove it immediately.

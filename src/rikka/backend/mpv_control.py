@@ -7,12 +7,12 @@ import subprocess
 
 from pathlib import Path
 
-from ..logs.logger import get_logger
+from rikka.utils.logger import get_logger
 
 class MPVControl:
     def __init__(self):
         self.is_windows = sys.platform == "win32"
-        self.ipc_path = r"\\.\pipe\ibuki-ipc" if self.is_windows else "/tmp/ibuki-ipc"
+        self.ipc_path = r"\\.\pipe\rikka-ipc" if self.is_windows else "/tmp/rikka-ipc"
 
         self.process = None
         self.socket = None

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Any
 from platformdirs import user_config_dir
 
-from ..logs.logger import get_logger
+from rikka.utils.logger import get_logger
 
 class AnimeSettings:
     DEFAULT_SETTINGS = {
@@ -25,7 +25,7 @@ class AnimeSettings:
         self.logger = get_logger("AnimeSettings")
         self.use_yaml = use_yaml
 
-        self.config_dir = Path(user_config_dir("ibuki", "XeonXE534"))
+        self.config_dir = Path(user_config_dir("rikka", "XeonXE534"))
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
         ext = "yaml" if use_yaml else "json"
@@ -170,4 +170,4 @@ class AnimeSettings:
 def get_default_config_path(use_yaml: bool = True) -> Path:
     """Get the default config file path"""
     ext = "yaml" if use_yaml else "json"
-    return Path.home() /"Project-Ibuki" / "config" / f"settings.{ext}"
+    return Path.home() /"Rikka" / "config" / f"settings.{ext}"

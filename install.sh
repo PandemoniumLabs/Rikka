@@ -33,39 +33,39 @@ for arg in "$@"; do
   [[ "$arg" == "--hard-reset" ]] && HARD_RESET=true
 done
 
-IBUKI_DIR="$HOME/Project-Ibuki"
+RIKKA_DIR="$HOME/Rikka"
 TMP_HELPER="$(mktemp)"
 
 # Atomic hard reset flow
 if $HARD_RESET; then
   warn "Hard reset enabled!"
   cd /tmp || exit 1
-  rm -rf "$IBUKI_DIR"
-  git clone https://github.com/XeonXE534/Project-Ibuki.git "$IBUKI_DIR" || {
+  rm -rf "$RIKKA_DIR"
+  git clone https://github.com/PandemoniumLabs/Rikka.git "$RIKKA_DIR" || {
     echo "Clone failed!"
     exit 1
   }
 
-  echo ">>> Done! Run: bash $IBUKI_DIR/$(basename "$0")"
+  echo ">>> Done! Run: bash $RIKKA_DIR/$(basename "$0")"
   exit 0
 fi
 
 # Display header
-if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/halo.png" ]]; then
+if [[ -n "${KITTY_WINDOW_ID-}" && -f "images/rikka.png" ]]; then
   kitty +kitten icat images/halo.png
   echo ""
 else
   echo -e "${CYAN}"
   cat <<'EOF'
-██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗    ██╗██████╗ ██╗   ██╗██╗  ██╗██╗
-██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝    ██║██╔══██╗██║   ██║██║ ██╔╝██║
-██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║       ██║██████╔╝██║   ██║█████╔╝ ██║
-██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║       ██║██╔══██╗██║   ██║██╔═██╗ ██║
-██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║       ██║██████╔╝╚██████╔╝██║  ██╗██║
-╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝       ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+██████╗ ██╗██╗  ██╗██╗  ██╗ █████╗ ██╗
+██╔══██╗██║██║ ██╔╝██║ ██╔╝██╔══██╗██║
+██████╔╝██║█████╔╝ █████╔╝ ███████║██║
+██╔══██╗██║██╔═██╗ ██╔═██╗ ██╔══██║╚═╝
+██║  ██║██║██║  ██╗██║  ██╗██║  ██║██╗
+╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝
 EOF
   echo -e "${RESET}"
-  echo -e "${CYAN}                         Project-Ibuki installer${RESET}"
+  echo -e "${CYAN}                         Rikka installer${RESET}"
   echo ""
 fi
 
@@ -92,16 +92,16 @@ info "Upgrading pipx..."
 pip install --upgrade pipx >/dev/null 2>&1 &
 spinner $! "Upgrading pipx"
 
-cd "$IBUKI_DIR"
+cd "$RIKKA_DIR"
 
-if pipx list | grep -q 'ibuki'; then
-  info "Ibuki detected, upgrading..."
+if pipx list | grep -q 'rikka'; then
+  info "Rikka detected, upgrading..."
   pipx install . --force >/dev/null 2>&1 &
-  spinner $! "Upgrading Ibuki"
-  success "Ibuki upgraded!"
+  spinner $! "Upgrading Rikka"
+  success "Rikka upgraded!"
 else
-  info "Installing Ibuki..."
+  info "Installing Rikka..."
   pipx install . --force >/dev/null 2>&1 &
-  spinner $! "Installing Ibuki"
-  success "Ibuki installed!"
+  spinner $! "Installing Rikka"
+  success "Rikka installed!"
 fi

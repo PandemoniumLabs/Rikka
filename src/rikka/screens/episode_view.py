@@ -5,9 +5,9 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import ListView, ListItem, Static, Footer
 
-from ibuki import CSS_PATH
+from rikka import CSS_PATH
 from ..backend.backend import AnimeBackend
-from ..logs.logger import get_logger
+from rikka.utils.logger import get_logger
 
 class EpisodeDetailScreen(Screen):
     BINDINGS = [

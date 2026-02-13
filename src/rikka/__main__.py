@@ -1,16 +1,17 @@
 from textual.app import App
-from .screens.home import IbukiHome
-from .backend.backend import AnimeBackend
 
-class Ibuki(App):
+from rikka.screens.home import Home
+from rikka.backend.backend import AnimeBackend
+
+class Rikka(App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.backend = AnimeBackend()
 
     def on_mount(self):
-        self.push_screen(IbukiHome(self.backend))
+        self.push_screen(Home(self.backend))
 
-app = Ibuki()
+app = Rikka()
 
 def run():
     app.run()
