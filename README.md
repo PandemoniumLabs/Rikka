@@ -52,7 +52,7 @@ The TUI experience on Windows varies by terminal. For best results, use **Window
 * **Terminal with True Color support**
 * **PiP packages** (installed via `install.sh`)
 * **MPV**
-
+images
 ---
 
 ## Screenshots
