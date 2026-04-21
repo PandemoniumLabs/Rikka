@@ -33,7 +33,7 @@ for arg in "$@"; do
   [[ "$arg" == "--hard-reset" ]] && HARD_RESET=true
 done
 
-RIKKA_DIR="$HOME/Rikka"
+RIKKA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMP_HELPER="$(mktemp)"
 
 # Atomic hard reset flow
