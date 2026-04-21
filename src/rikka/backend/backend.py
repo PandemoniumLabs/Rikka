@@ -127,7 +127,6 @@ class AnimeBackend:
 
     def on_mpv_exit(self, anime: Anime, episode: int, anime_id: str, anime_name: str):
         """Called when MPV closes, save watch history"""
-
         self.logger.info(f"MPV closed, saving history for {anime_name} EP:{episode} :)")
         try:
             elapsed = self.player.get_elapsed_time()
